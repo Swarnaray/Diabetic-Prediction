@@ -1,0 +1,166 @@
+import pandas as pd 
+import matplotlib.pyplot as plt
+import numpy as np
+import seaborn as sns
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
+get_ipython().run_line_magic('matplotlib', 'inline')
+
+dataset = pd.read_csv("diabetes.csv")
+dataset
+
+dataset.head(6)
+
+dataset.tail(6)
+
+dataset.shape
+
+diabetes_true_count = len(dataset.loc[dataset['Outcome'] == 1])
+diabetes_false_count = len(dataset.loc[dataset['Outcome'] == 0])
+(diabetes_true_count,diabetes_false_count)
+
+dataset.info()
+
+dataset.corr()  ## Show the pairwise correlation of all columns in the dataframe
+
+# Get correlations of each features in dataset and plot into a heat map
+corrmat = dataset.corr()
+top_corr_features = corrmat.index
+plt.figure(figsize=(10,10))
+g=sns.heatmap(dataset[top_corr_features].corr(),annot=True,cmap="RdYlGn")
+
+plt.figure(figsize=(15, 20))
+j=1
+for i in range(1,9):
+        plt.subplot(5,2,i)
+        plt.scatter(dataset.iloc[:,0],dataset.iloc[:,i])
+        plt.xlabel(dataset.columns[0])
+        plt.ylabel(dataset.columns[i])
+        j+=1
+
+plt.figure(figsize=(15, 20))
+j=1
+for i in range(2,9):
+        plt.subplot(5,2,j)
+        plt.scatter(dataset.iloc[:,1],dataset.iloc[:,i])
+        plt.xlabel(dataset.columns[1])
+        plt.ylabel(dataset.columns[i])
+        j+=1
+
+plt.figure(figsize=(15, 20))
+j=1
+for i in range(3,9):
+        plt.subplot(5,2,j)
+        plt.scatter(dataset.iloc[:,2],dataset.iloc[:,i])
+        plt.xlabel(dataset.columns[2])
+        plt.ylabel(dataset.columns[i])
+        j+=1
+
+
+# In[13]:
+
+
+plt.figure(figsize=(15, 20))
+j=1
+for i in range(4,9):
+        plt.subplot(5,2,j)
+        plt.scatter(dataset.iloc[:,3],dataset.iloc[:,i])
+        plt.xlabel(dataset.columns[3])
+        plt.ylabel(dataset.columns[i])
+        j+=1
+
+plt.figure(figsize=(15, 20))
+j=1
+for i in range(5,9):
+        plt.subplot(5,2,j)
+        plt.scatter(dataset.iloc[:,4],dataset.iloc[:,i])
+        plt.xlabel(dataset.columns[4])
+        plt.ylabel(dataset.columns[i])
+        j+=1
+
+
+# In[15]:
+
+
+plt.figure(figsize=(15, 20))
+j=1
+for i in range(6,9):
+        plt.subplot(5,2,j)
+        plt.scatter(dataset.iloc[:,5],dataset.iloc[:,i])
+        plt.xlabel(dataset.columns[5])
+        plt.ylabel(dataset.columns[i])
+        j+=1
+
+plt.figure(figsize=(15, 20))
+j=1
+for i in range(7,9):
+        plt.subplot(5,2,j)
+        plt.scatter(dataset.iloc[:,6],dataset.iloc[:,i])
+        plt.xlabel(dataset.columns[6])
+        plt.ylabel(dataset.columns[i])
+        j+=1
+
+plt.figure(figsize=(15, 20))
+j=1
+for i in range(8,9):
+        plt.subplot(5,2,j)
+        plt.scatter(dataset.iloc[:,7],dataset.iloc[:,i])
+        plt.xlabel(dataset.columns[7])
+        plt.ylabel(dataset.columns[i])
+        j+=1
+
+dataset.isnull().values.any()
+
+dataset.isnull().sum()
+
+sns.heatmap(dataset.isnull())
+
+X=dataset.drop('Outcome', axis=1)
+X
+
+y=dataset['Outcome']
+y
+
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test=train_test_split(X,y, test_size=0.1, random_state=0)
+
+y_test
+
+logmodl=LogisticRegression()
+
+logmodl.fit(X_train, y_train)
+
+X_test
+
+y_test
+
+y_pred=logmodl.predict(X_test)
+
+y_pred
+
+df=pd.DataFrame({'Actual':y_test, 'Predicted':y_pred})
+df
+
+accuracy_score(y_test, y_pred)*100
+
+cm=confusion_matrix(y_test, y_pred)
+((cm[0][0]+cm[1][1])/(cm[0][0]+cm[0][1]+cm[1][0]+cm[1][1]))*100
+
+((48+19)/(48+3+7+19))*100
+
+classification_report(y_test, y_pred)
+
+predict={0:'Not Diabetic',1:'Diabetic'}
+
+predict
+
+z=logmodl.predict([[2,126,60,30,1,47,31.2,24]])
+z
+
+predict[z[0]]
+
+z=logmodl.predict([[4,76,62,0,0,34.0,0.391,25]])
+z
+
+predict[z[0]]
+
